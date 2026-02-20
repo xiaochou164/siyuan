@@ -32,7 +32,7 @@ go env -w CGO_ENABLED=1
 EORUN
 
 WORKDIR /kernel
-ADD kernel/go.* .
+ADD kernel/go.* ./
 RUN --mount=type=cache,target=/root/.cache/go-build --mount=type=cache,target=/go/pkg \
     go mod download
 
