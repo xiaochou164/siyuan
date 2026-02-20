@@ -49,7 +49,7 @@ ENV RUN_IN_CONTAINER=true
 EXPOSE 6806
 
 WORKDIR /opt/siyuan/
-COPY --from=go-build /kernel/kernel /kernel/entrypoint.sh .
+COPY --from=go-build /kernel/kernel /kernel/entrypoint.sh ./
 RUN chmod 755 /opt/siyuan/kernel /opt/siyuan/entrypoint.sh
 COPY --from=node-build /artifacts .
 COPY nginx.web-desktop.conf /etc/nginx/nginx.conf
