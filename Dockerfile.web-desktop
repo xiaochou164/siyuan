@@ -18,8 +18,8 @@ RUN <<EORUN
 #!/bin/bash -e
 pnpm run build
 pnpm run build:web-desktop
-mkdir /artifacts
-mv appearance stage guide changelogs /artifacts/
+mkdir -p /app/artifacts
+mv appearance stage guide changelogs /app/artifacts/
 EORUN
 
 FROM golang:1.25-alpine AS go-build
@@ -51,7 +51,7 @@ EXPOSE 6806
 WORKDIR /opt/siyuan/
 COPY --from=go-build /kernel/kernel /kernel/entrypoint.sh ./
 RUN chmod 755 /opt/siyuan/kernel /opt/siyuan/entrypoint.sh
-COPY --from=node-build /artifacts/ /opt/siyuan/
+COPY --from=node-build /app/artifacts/ /opt/siyuan/
 COPY nginx.web-desktop.conf /etc/nginx/nginx.conf
 
 CMD ["/bin/sh","-c","/opt/siyuan/kernel --port 6807 & nginx -g 'daemon off;'"]
