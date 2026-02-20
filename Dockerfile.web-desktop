@@ -18,6 +18,8 @@ RUN <<EORUN
 #!/bin/bash -e
 pnpm run build
 pnpm run build:web-desktop
+rm -rf stage/build/desktop
+cp -r stage/build/web-desktop stage/build/desktop
 EORUN
 
 FROM golang:1.25-alpine AS go-build
@@ -39,7 +41,7 @@ RUN go build --tags fts5 -v -ldflags "-s -w"
 FROM alpine:latest
 LABEL maintainer="Liang Ding<845765@qq.com>"
 
-RUN apk add --no-cache ca-certificates tzdata su-exec nginx
+RUN apk add --no-cache ca-certificates tzdata su-exec
 
 ENV TZ=Asia/Shanghai
 ENV HOME=/home/siyuan
@@ -53,6 +55,5 @@ COPY --from=node-build /app/appearance /opt/siyuan/appearance
 COPY --from=node-build /app/stage /opt/siyuan/stage
 COPY --from=node-build /app/guide /opt/siyuan/guide
 COPY --from=node-build /app/changelogs /opt/siyuan/changelogs
-COPY nginx.web-desktop.conf /etc/nginx/nginx.conf
-
-CMD ["/bin/sh","-c","/opt/siyuan/kernel --port 6807 & nginx -g 'daemon off;'"]
+ENTRYPOINT ["/opt/siyuan/entrypoint.sh"]
+CMD ["/opt/siyuan/kernel"]
