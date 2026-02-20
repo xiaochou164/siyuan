@@ -87,7 +87,8 @@ kernel_cmd() {
   if [[ -n "$ACCESS_AUTH_CODE" ]]; then
     cmd+=("--accessAuthCode=$ACCESS_AUTH_CODE")
   fi
-  printf '%q ' "${cmd[@]}"
+  # Force server mode behavior so kernel won't exit when no desktop UI process is attached.
+  printf '%q ' "RUN_IN_CONTAINER=true" "${cmd[@]}"
 }
 
 start_bg() {
