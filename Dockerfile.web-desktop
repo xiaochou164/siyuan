@@ -31,12 +31,15 @@ go env -w GO111MODULE=on
 go env -w CGO_ENABLED=1
 EORUN
 
+ENV CGO_ENABLED=1
+ENV CC=gcc
+
 WORKDIR /kernel
 ADD kernel/go.* ./
 RUN go mod download
 
 ADD kernel/ .
-RUN go build --tags fts5 -v -ldflags "-s -w"
+RUN CGO_ENABLED=1 go build --tags fts5 -v -ldflags "-s -w"
 
 FROM alpine:latest
 LABEL maintainer="Liang Ding<845765@qq.com>"
