@@ -24,6 +24,9 @@ EORUN
 
 FROM golang:1.25-alpine AS go-build
 
+ARG GOPROXY=https://goproxy.cn,direct
+ARG GOSUMDB=sum.golang.google.cn
+
 RUN <<EORUN
 #!/bin/sh -e
 apk add --no-cache gcc musl-dev
@@ -33,10 +36,12 @@ EORUN
 
 ENV CGO_ENABLED=1
 ENV CC=gcc
+ENV GOPROXY=${GOPROXY}
+ENV GOSUMDB=${GOSUMDB}
 
 WORKDIR /kernel
 ADD kernel/go.* ./
-RUN go mod download
+RUN go env -w GOPROXY="${GOPROXY}" GOSUMDB="${GOSUMDB}" && go mod download -x
 
 ADD kernel/ .
 RUN CGO_ENABLED=1 go build --tags fts5 -v -ldflags "-s -w"
