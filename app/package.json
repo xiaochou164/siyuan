@@ -9,6 +9,8 @@
     "lint": "eslint . --fix --cache",
     "dev": "webpack --mode development",
     "dev:mobile": "webpack --mode development --config webpack.mobile.js",
+    "dev:web-desktop": "webpack --mode development --config webpack.web.desktop.js",
+    "build:web-desktop": "webpack --mode production --config webpack.web.desktop.js",
     "dev:desktop": "webpack --mode development --config webpack.desktop.js",
     "dev:export": "webpack --mode development --config webpack.export.js",
     "build": "pnpm run '/build:.*/'",
